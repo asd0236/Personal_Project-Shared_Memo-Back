@@ -15,11 +15,11 @@ spring:
         hibernate:
           dialect: org.hibernate.dialect.MariaDBDialect
 
-  # ?????? ??
+  # 하이버네이트 설정
   jpa:
     properties:
       hibernate:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: update # none, drop, create, createDrop, update, validate ? ?? ?? ??
+      ddl-auto: update # none, drop, create, createDrop, update, validate 중 하나 옵션 선택

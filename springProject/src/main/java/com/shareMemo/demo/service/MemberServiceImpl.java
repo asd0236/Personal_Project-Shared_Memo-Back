@@ -55,13 +55,13 @@ public class MemberServiceImpl implements MemberService {
     // loginIn 중복 체크, 중복 시 true return
     @Override
     public boolean checkLoginIdDuplicate(String loginId) {
-        return memberRepository.existByLoginId(loginId);
+        return memberRepository.existsByLoginId(loginId);
     }
 
     // nickname 중복 체크, 중복 시 true return
     @Override
     public boolean checkNicknameDuplicate(String nickname) {
-        return memberRepository.existByNickname(nickname);
+        return memberRepository.existsByNickname(nickname);
     }
 
 

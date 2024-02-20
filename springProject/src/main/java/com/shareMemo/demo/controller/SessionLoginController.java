@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/session-login")
 public class SessionLoginController {
 
-    MemberService memberService;
+    private final MemberService memberService;
 
     @GetMapping(value = {"", "/"}) // 다른 페이지에 있을 때 로그인 상태가 아니면 메인 페이지로
     public String home(Model model, @SessionAttribute(name = "memberId", required = false) Integer memberId) {
@@ -30,7 +30,7 @@ public class SessionLoginController {
         Member loginMember = memberService.getLoginMember(memberId);
 
         if (loginMember != null) {
-            model.addAttribute("nickname", loginMember.getNickName());
+            model.addAttribute("nickname", loginMember.getNickname());
         }
 
         return "home";
