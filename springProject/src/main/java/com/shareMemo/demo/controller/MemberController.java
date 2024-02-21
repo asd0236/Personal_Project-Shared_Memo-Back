@@ -3,21 +3,18 @@ package com.shareMemo.demo.controller;
 import com.shareMemo.demo.domain.entity.Member;
 import com.shareMemo.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/test")
 public class MemberController {
 
     private MemberRepository memberRepository;
 
-    @PostMapping("/sign-in")
-    public void signIn(@RequestBody Member member){
-
+    @GetMapping
+    public String test(){
+        return "hello world";
     }
 
 }

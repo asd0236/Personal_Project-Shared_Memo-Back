@@ -29,6 +29,7 @@ public class JoinRequest {
                 .loginId(loginId)
                 .password(this.password)
                 .email(this.email)
+                .nickname(this.nickname)
                 .password(encodedPassword)
                 .build();
     }

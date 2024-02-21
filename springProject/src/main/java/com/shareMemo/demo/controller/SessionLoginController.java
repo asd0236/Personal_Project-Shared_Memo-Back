@@ -33,7 +33,7 @@ public class SessionLoginController {
             model.addAttribute("nickname", loginMember.getNickname());
         }
 
-        return "home";
+        return "mainPage";
     }
 
     @GetMapping("/join")
@@ -69,13 +69,13 @@ public class SessionLoginController {
             return "join";
 
         memberService.join(joinRequest);
-        return "redirect:/session-login";
+        return "redirect:/loginPage";
     }
 
     @GetMapping("/login")
     public String loginPage(Model model) {
         model.addAttribute("loginType", "session-login");
-        model.addAttribute("pageName", "세션 로그인");
+        model.addAttribute("pageName", "    세션 로그인");
 
         model.addAttribute("loginRequest", new LoginRequest());
         return "login";
