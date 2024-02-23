@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class JoinResponse {
+public class SignResponse {
 
     public String resultString;
     public boolean isSuccess;

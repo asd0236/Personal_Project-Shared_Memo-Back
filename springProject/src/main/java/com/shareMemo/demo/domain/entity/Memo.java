@@ -3,6 +3,8 @@ package com.shareMemo.demo.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Builder
 @ToString
@@ -12,7 +14,7 @@ import lombok.*;
 public class Memo {
     @Id
     @GeneratedValue
-    Integer memoId;
+    private Integer memoId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "notebook_id")
@@ -22,4 +24,6 @@ public class Memo {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    private LocalDate createDate;
 }

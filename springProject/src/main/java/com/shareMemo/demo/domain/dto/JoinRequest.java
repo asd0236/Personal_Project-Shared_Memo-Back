@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,13 +27,16 @@ public class JoinRequest {
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
 
-    public Member toEntity(String encodedPassword){
+    private List<String> roles = new ArrayList<>();
+
+    public Member toEntity(String encodedPassword, List<String> roles){
         return Member.builder()
                 .loginId(loginId)
                 .password(this.password)
                 .email(this.email)
                 .nickname(this.nickname)
                 .password(encodedPassword)
+                .roles(roles)
                 .build();
     }
 }

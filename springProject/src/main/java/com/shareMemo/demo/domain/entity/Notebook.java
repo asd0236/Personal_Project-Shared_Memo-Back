@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Builder
 @ToString
@@ -16,4 +18,6 @@ public class Notebook {
     @GeneratedValue
     private Integer notebookId;
     private String name;
+    private LocalDate createDate;
+
 }

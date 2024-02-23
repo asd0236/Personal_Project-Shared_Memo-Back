@@ -1,14 +1,18 @@
-package com.shareMemo.demo.service;
+package com.shareMemo.demo.service.impl;
 
 import com.shareMemo.demo.domain.dto.JoinRequest;
 import com.shareMemo.demo.domain.dto.LoginRequest;
+import com.shareMemo.demo.domain.dto.MemberInfoDto;
 import com.shareMemo.demo.domain.entity.Member;
 import com.shareMemo.demo.repository.MemberRepository;
+import com.shareMemo.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +25,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void join(JoinRequest request) {
-        memberRepository.save(request.toEntity(encoder.encode(request.getPassword()))); // 암호화
-    }
+        // Password 암호화
+        String encodedPassword = encoder.encode(request.getPassword());
+        List<String> roles = new ArrayList<>();
+        roles.add("USER"); // USER 권한 부여
+        memberRepository.save(request.toEntity(encodedPassword, roles));
+}
 
     // LoginRequest(loginId, password)를 입력받아 loginId에 대응되는 password가 일치하면 Member return
     // loginId가 존재하지 않거나 password가 일치하지 않으면 null return
@@ -35,7 +43,8 @@ public class MemberServiceImpl implements MemberService {
 
         // 찾아온 Member의 password와 입력된 password가 다르면 null return
         Member member = optionalMember.get();
-        if (!member.getPassword().equals(request.getPassword())) return null;
+        // 인코딩 되지 않은 패스워드와 인코딩 된 패스워드를 비교하여 일치하면 true
+        if (!encoder.matches(request.getPassword(), member.getPassword())) return null;
 
         return member;
     }
@@ -43,13 +52,15 @@ public class MemberServiceImpl implements MemberService {
     // memberId를 입력받아 member를 return
     // 인증, 인가 시 사용
     @Override
-    public Member getLoginMember(Integer memberId) {
-        if (memberId == null) return null;
+    public MemberInfoDto getLoginMember(Integer memberId) {
+        if (memberId == null) return MemberInfoDto.setNull();
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-
         // memberId가 null이거나(로그인 x) memberId로 찾아온 member가 없으면 null return
-        return optionalMember.orElse(null);
+        if(optionalMember.isEmpty()) return MemberInfoDto.setNull();
+
+        return MemberInfoDto.toDto(optionalMember.get());
+
     }
 
     // loginIn 중복 체크, 중복 시 true return
@@ -60,8 +71,8 @@ public class MemberServiceImpl implements MemberService {
 
     // nickname 중복 체크, 중복 시 true return
     @Override
-    public boolean checkNicknameDuplicate(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+    public boolean checkEmailDuplicate(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
 
