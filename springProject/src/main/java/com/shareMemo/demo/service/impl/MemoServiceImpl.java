@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,16 +23,16 @@ public class MemoServiceImpl implements MemoService {
     private final NotebookRepository notebookRepository;
     private final MemberNotebookRepository memberNotebookRepository;
 
-    public Optional<Memo> getMemoList(Integer memberId, Integer notebookId){
+    public List<Memo> getMemoList(Integer memberId, Integer notebookId) {
         // 멤버가 해당 노트북을 갖고 있는지 확인
-        if(!memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
-            return Optional.empty();
+        if (!memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
+            return null;
         return memoRepository.findByNotebook_NotebookId(notebookId);
     }
 
-    public Memo addMemo(Integer memberId, Integer notebookId, MemoDto memoDto){
+    public Memo addMemo(Integer memberId, Integer notebookId, MemoDto memoDto) {
         // 멤버가 해당 노트북을 갖고 있는지 확인
-        if(memberId == null ||
+        if (memberId == null ||
                 !memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
             return Memo.builder()
                     .notebook(null)
@@ -46,11 +47,42 @@ public class MemoServiceImpl implements MemoService {
         // currentNotebook가 존재하면 memoRepository에 해당 노트북을 외래키로 한 객체 넣기
         return currentNotebook.map(notebook -> memoRepository.save(memoDto.toEntity(notebook)))
                 .orElseGet(() -> Memo.builder()
+                        .notebook(null)
+                        .title(null)
+                        .content(null)
+                        .createDate(null)
+                        .build());
+
+    }
+
+    public Memo deleteMemo(Integer memberId, Integer memoId) {
+        // 해당 메모가 존재하는지 확인
+        if (memoRepository.findById(memoId).isEmpty())
+            return Memo.builder()
                 .notebook(null)
                 .title(null)
                 .content(null)
                 .createDate(null)
-                .build());
+                .build();
+
+
+        // 멤버가 해당 노트북을 갖고 있는지 확인
+
+        Integer notebookId = memoRepository.findById(memoId).get().getNotebook().getNotebookId();
+
+        if (memberId == null ||
+                !memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
+            return Memo.builder()
+                    .notebook(null)
+                    .title(null)
+                    .content(null)
+                    .createDate(null)
+                    .build();
+
+        Memo targetMemo = memoRepository.findById(memoId).get();
+        memoRepository.deleteById(memoId);
+
+        return targetMemo;
 
     }
 

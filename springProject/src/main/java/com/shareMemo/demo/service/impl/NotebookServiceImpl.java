@@ -26,7 +26,6 @@ public class NotebookServiceImpl implements NotebookService {
     private final MemberRepository memberRepository;
     private final NotebookRepository notebookRepository;
 
-    @Override
     public List<Notebook> getNotebookList(Integer memberId) {
         // memberId에 해당하는 회원 노트북 리스트 조회
         Optional<MemberNotebook> memberNotebooks = memberNotebookRepository.findByMember_MemberId(memberId);
@@ -37,7 +36,6 @@ public class NotebookServiceImpl implements NotebookService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public Notebook addNotebook(Integer memberId, String notebookName) {
         if(memberId == null) // 로그인중이 아닐 때
             return Notebook.builder()
@@ -68,6 +66,29 @@ public class NotebookServiceImpl implements NotebookService {
 
         return savedNotebook;
 
+    }
+
+    public Notebook deleteMemo(Integer memberId, Integer notebookId) {
+        if(memberId == null) // 로그인중이 아닐 때
+            return Notebook.builder()
+                    .notebookId(null)
+                    .name(null)
+                    .createDate(null)
+                    .build();
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+
+        // 없는 유저 또는 없느 노트북 정보를 조회할 때
+        if(memberRepository.findById(memberId).isEmpty() || notebookRepository.findById(notebookId).isEmpty())
+            return Notebook.builder()
+                    .notebookId(null)
+                    .name(null)
+                    .createDate(null)
+                    .build();
+
+        Notebook targetNotebook = notebookRepository.findById(notebookId).get();
+        notebookRepository.deleteById(notebookId);
+        return targetNotebook;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.shareMemo.demo.controller;
 
 
+import com.shareMemo.demo.domain.entity.Memo;
 import com.shareMemo.demo.domain.entity.Notebook;
 import com.shareMemo.demo.service.NotebookService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,13 @@ public class NotebookController {
     public Notebook addMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
                             @RequestParam String notebookName) { // 1:1 매핑인 경우 @RequestParam 사용
         return notebookService.addNotebook(memberId, notebookName);
+    }
+
+    @DeleteMapping("/del/{notebookId}")
+    @ResponseBody
+    public Notebook deleteMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+                           @PathVariable(value = "notebookId") Integer notebookId){
+        return notebookService.deleteMemo(memberId, notebookId);
     }
 
 }

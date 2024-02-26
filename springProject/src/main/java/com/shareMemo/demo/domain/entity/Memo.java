@@ -16,7 +16,7 @@ public class Memo {
     @GeneratedValue
     private Integer memoId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "notebook_id")
     private Notebook notebook;
 
