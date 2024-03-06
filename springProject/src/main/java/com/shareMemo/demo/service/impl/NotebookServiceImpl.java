@@ -28,7 +28,7 @@ public class NotebookServiceImpl implements NotebookService {
 
     public List<Notebook> getNotebookList(Integer memberId) {
         // memberId에 해당하는 회원 노트북 리스트 조회
-        Optional<MemberNotebook> memberNotebooks = memberNotebookRepository.findByMember_MemberId(memberId);
+        List<MemberNotebook> memberNotebooks = memberNotebookRepository.findByMember_MemberId(memberId);
 
         // 회원의 노트북 리스트에서 노트북 객체들을 추출하여 반환
         return memberNotebooks.stream()
