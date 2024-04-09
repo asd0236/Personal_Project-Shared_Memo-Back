@@ -26,6 +26,9 @@ public class Member implements UserDetails {
     private String email;
     private String nickname;
 
+    private String provider;    // "kakao"
+    private String providerId;  // 카카오로 로그인한 유저 고유의 id가 들어가게 된다
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
