@@ -22,14 +22,20 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring security
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security' // 패스워드 암호화
 
+	// Database
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
+
+	// OAuth 2.0 Login
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	// 유효성 검증 및 @NotBlank 어노테이션 사용할 때 필요
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
