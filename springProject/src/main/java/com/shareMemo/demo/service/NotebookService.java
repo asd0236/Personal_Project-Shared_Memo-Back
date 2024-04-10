@@ -5,7 +5,7 @@ import com.shareMemo.demo.domain.entity.Notebook;
 import java.util.List;
 
 public interface NotebookService {
-     List<Notebook> getNotebookList(Integer memberId);
-    Notebook addNotebook(Integer memberId, String notebookName);
-    Notebook deleteMemo(Integer memberId, Integer notebookId);
+     List<Notebook> getNotebookList(Long memberId);
+    Notebook addNotebook(Long memberId, String notebookName);
+    Notebook deleteMemo(Long memberId, Integer notebookId);
 }

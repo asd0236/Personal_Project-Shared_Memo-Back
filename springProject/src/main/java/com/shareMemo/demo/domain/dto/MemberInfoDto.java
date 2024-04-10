@@ -11,14 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class MemberInfoDto {
-    private Integer memberId;
+    private Long memberId;
     private String loginId;
     private String email;
     private String nickname;
 
     static public MemberInfoDto toDto(Member member){
         return MemberInfoDto.builder()
-                .memberId(member.getMemberId())
+                .memberId(member.getId())
                 .loginId(member.getLoginId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())

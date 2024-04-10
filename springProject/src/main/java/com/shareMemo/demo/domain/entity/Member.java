@@ -20,14 +20,12 @@ import java.util.stream.Collectors;
 public class Member implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer memberId;
+    private Long id;
     private String loginId;
     private String password;
     private String email;
     private String nickname;
-
-    private String provider;    // "kakao"
-    private String providerId;  // 카카오로 로그인한 유저 고유의 id가 들어가게 된다
+    private Long kakaoId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

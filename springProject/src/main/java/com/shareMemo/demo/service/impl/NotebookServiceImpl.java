@@ -26,9 +26,9 @@ public class NotebookServiceImpl implements NotebookService {
     private final MemberRepository memberRepository;
     private final NotebookRepository notebookRepository;
 
-    public List<Notebook> getNotebookList(Integer memberId) {
+    public List<Notebook> getNotebookList(Long memberId) {
         // memberId에 해당하는 회원 노트북 리스트 조회
-        List<MemberNotebook> memberNotebooks = memberNotebookRepository.findByMember_MemberId(memberId);
+        List<MemberNotebook> memberNotebooks = memberNotebookRepository.findByMember_Id(memberId);
 
         // 회원의 노트북 리스트에서 노트북 객체들을 추출하여 반환
         return memberNotebooks.stream()
@@ -36,7 +36,7 @@ public class NotebookServiceImpl implements NotebookService {
                 .collect(Collectors.toList());
     }
 
-    public Notebook addNotebook(Integer memberId, String notebookName) {
+    public Notebook addNotebook(Long memberId, String notebookName) {
         if(memberId == null) // 로그인중이 아닐 때
             return Notebook.builder()
                     .notebookId(null)
@@ -68,15 +68,13 @@ public class NotebookServiceImpl implements NotebookService {
 
     }
 
-    public Notebook deleteMemo(Integer memberId, Integer notebookId) {
+    public Notebook deleteMemo(Long memberId, Integer notebookId) {
         if(memberId == null) // 로그인중이 아닐 때
             return Notebook.builder()
                     .notebookId(null)
                     .name(null)
                     .createDate(null)
                     .build();
-
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
 
         // 없는 유저 또는 없느 노트북 정보를 조회할 때
         if(memberRepository.findById(memberId).isEmpty() || notebookRepository.findById(notebookId).isEmpty())

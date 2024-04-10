@@ -1,12 +1,14 @@
 package com.shareMemo.demo.service.impl;
 
 import com.shareMemo.demo.domain.dto.JoinRequest;
+import com.shareMemo.demo.domain.dto.KakaoUserDto;
 import com.shareMemo.demo.domain.dto.LoginRequest;
 import com.shareMemo.demo.domain.dto.MemberInfoDto;
 import com.shareMemo.demo.domain.entity.Member;
 import com.shareMemo.demo.repository.MemberRepository;
 import com.shareMemo.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -30,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
         List<String> roles = new ArrayList<>();
         roles.add("USER"); // USER 권한 부여
         memberRepository.save(request.toEntity(encodedPassword, roles));
-}
+    }
 
     // LoginRequest(loginId, password)를 입력받아 loginId에 대응되는 password가 일치하면 Member return
     // loginId가 존재하지 않거나 password가 일치하지 않으면 null return
@@ -49,6 +52,25 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    @Override
+    public Member kakaoLogin(KakaoUserDto kakaoUserDto) {
+
+        Member returnMember = memberRepository.findByKakaoId(kakaoUserDto.getMemberId());
+
+        if (returnMember == null) {
+            returnMember = Member.builder()
+                    .kakaoId(kakaoUserDto.getMemberId())
+                    .nickname(kakaoUserDto.getNickname())
+                    .build();
+
+            memberRepository.save(returnMember);
+        }
+
+        log.info(String.valueOf(returnMember));
+
+        return returnMember;
+    }
+
     // memberId를 입력받아 member를 return
     // 인증, 인가 시 사용
     @Override
@@ -57,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         // memberId가 null이거나(로그인 x) memberId로 찾아온 member가 없으면 null return
-        if(optionalMember.isEmpty()) return MemberInfoDto.setNull();
+        if (optionalMember.isEmpty()) return MemberInfoDto.setNull();
 
         return MemberInfoDto.toDto(optionalMember.get());
 

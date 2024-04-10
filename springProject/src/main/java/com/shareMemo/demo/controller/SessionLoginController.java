@@ -6,18 +6,16 @@ import com.shareMemo.demo.domain.dto.SignResponse;
 import com.shareMemo.demo.domain.dto.LoginRequest;
 import com.shareMemo.demo.domain.entity.Member;
 import com.shareMemo.demo.service.MemberService;
+import com.shareMemo.demo.service.SessionLoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -26,6 +24,7 @@ import java.util.Objects;
 public class SessionLoginController {
 
     private final MemberService memberService;
+    private final SessionLoginService sessionLoginService;
 
     @PostMapping("/join")
     @ResponseBody
@@ -57,26 +56,7 @@ public class SessionLoginController {
 
         // 로그인 성공 => 세션 생성
 
-        // 세션을 생성하기 전에 기존의 세션 파기
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true); // Session이 없으면 생성
-        // 세션에 memberId를 넣어줌
-        session.setAttribute("memberId", member.getMemberId());
-        session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
-
-
-        // 세션 id와 저장된 객체 정보 출력
-        System.out.println(session.getId() + ", " + session.getAttribute("memberId"));
-
-        //세션 데이터 출력
-        session.getAttributeNames().asIterator()
-                .forEachRemaining(name -> log.info("session name={}, value={}", name, session.getAttribute(name)));
-
-        log.info("sessionId={}", session.getId());
-        log.info("getMaxInactiveInterval={}", session.getMaxInactiveInterval());
-        log.info("creationTime={}", new Date(session.getCreationTime()));
-        log.info("lastAccessedTime={}", new Date(session.getLastAccessedTime()));
-        log.info("isNew={}", session.isNew());
+        sessionLoginService.sessionLogin(member, httpServletRequest);
 
         return new SignResponse("로그인에 성공하였습니다.", true);
     }

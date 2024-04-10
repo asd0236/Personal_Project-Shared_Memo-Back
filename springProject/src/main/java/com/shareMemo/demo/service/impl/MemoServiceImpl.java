@@ -23,17 +23,17 @@ public class MemoServiceImpl implements MemoService {
     private final NotebookRepository notebookRepository;
     private final MemberNotebookRepository memberNotebookRepository;
 
-    public List<Memo> getMemoList(Integer memberId, Integer notebookId) {
+    public List<Memo> getMemoList(Long memberId, Integer notebookId) {
         // 멤버가 해당 노트북을 갖고 있는지 확인
-        if (!memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
+        if (!memberNotebookRepository.existsByMember_IdAndNotebook_NotebookId(memberId, notebookId))
             return null;
         return memoRepository.findByNotebook_NotebookId(notebookId);
     }
 
-    public Memo addMemo(Integer memberId, Integer notebookId, MemoDto memoDto) {
+    public Memo addMemo(Long memberId, Integer notebookId, MemoDto memoDto) {
         // 멤버가 해당 노트북을 갖고 있는지 확인
         if (memberId == null ||
-                !memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
+                !memberNotebookRepository.existsByMember_IdAndNotebook_NotebookId(memberId, notebookId))
             return Memo.builder()
                     .notebook(null)
                     .title(null)
@@ -55,7 +55,7 @@ public class MemoServiceImpl implements MemoService {
 
     }
 
-    public Memo deleteMemo(Integer memberId, Integer memoId) {
+    public Memo deleteMemo(Long memberId, Integer memoId) {
         // 해당 메모가 존재하는지 확인
         if (memoRepository.findById(memoId).isEmpty())
             return Memo.builder()
@@ -71,7 +71,7 @@ public class MemoServiceImpl implements MemoService {
         Integer notebookId = memoRepository.findById(memoId).get().getNotebook().getNotebookId();
 
         if (memberId == null ||
-                !memberNotebookRepository.existsByMember_MemberIdAndNotebook_NotebookId(memberId, notebookId))
+                !memberNotebookRepository.existsByMember_IdAndNotebook_NotebookId(memberId, notebookId))
             return Memo.builder()
                     .notebook(null)
                     .title(null)

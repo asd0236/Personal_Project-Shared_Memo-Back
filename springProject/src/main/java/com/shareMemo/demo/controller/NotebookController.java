@@ -21,20 +21,20 @@ public class NotebookController {
 
     @GetMapping
     @ResponseBody
-    public List<Notebook> getNotebookList(@SessionAttribute(name = "memberId", required = false) Integer memberId) {
+    public List<Notebook> getNotebookList(@SessionAttribute(name = "memberId", required = false) Long memberId) {
         return notebookService.getNotebookList(memberId);
     }
 
     @PostMapping("/add")
     @ResponseBody
-    public Notebook addMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+    public Notebook addMemo(@SessionAttribute(name = "memberId", required = false) Long memberId,
                             @RequestParam String notebookName) { // 1:1 매핑인 경우 @RequestParam 사용
         return notebookService.addNotebook(memberId, notebookName);
     }
 
     @DeleteMapping("/del/{notebookId}")
     @ResponseBody
-    public Notebook deleteMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+    public Notebook deleteMemo(@SessionAttribute(name = "memberId", required = false) Long memberId,
                            @PathVariable(value = "notebookId") Integer notebookId){
         return notebookService.deleteMemo(memberId, notebookId);
     }

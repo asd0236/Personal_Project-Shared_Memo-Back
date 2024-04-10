@@ -21,14 +21,14 @@ public class MemoController {
 
     @GetMapping("/{notebookId}")
     @ResponseBody
-    public List<Memo> memoList(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+    public List<Memo> memoList(@SessionAttribute(name = "memberId", required = false) Long memberId,
                                @PathVariable(value = "notebookId") Integer notebookId) {
         return memoService.getMemoList(memberId, notebookId);
     }
 
     @PostMapping("/add/{notebookId}")
     @ResponseBody
-    public Memo addMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+    public Memo addMemo(@SessionAttribute(name = "memberId", required = false) Long memberId,
                         @PathVariable(value = "notebookId") Integer notebookId,
                         @ModelAttribute MemoDto memoDto) {
         log.info(String.valueOf(memoDto));
@@ -37,7 +37,7 @@ public class MemoController {
 
     @DeleteMapping("/del/{memoId}")
     @ResponseBody
-    public Memo deleteMemo(@SessionAttribute(name = "memberId", required = false) Integer memberId,
+    public Memo deleteMemo(@SessionAttribute(name = "memberId", required = false) Long memberId,
                            @PathVariable(value = "memoId") Integer memoId){
         return memoService.deleteMemo(memberId, memoId);
     }
