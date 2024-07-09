@@ -42,4 +42,12 @@ public class MemoController {
         return memoService.deleteMemo(memberId, memoId);
     }
 
+    @PutMapping("/update/{memoId}")
+    @ResponseBody
+    public Memo updateMemo(@SessionAttribute(name = "memberId", required = false) Long memberId,
+                           @PathVariable(value = "memoId") Integer memoId,
+                           @ModelAttribute MemoDto memoDto){
+        return memoService.updateMemo(memberId, memoId, memoDto);
+    }
+
 }

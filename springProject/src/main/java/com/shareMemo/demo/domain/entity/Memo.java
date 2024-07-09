@@ -26,4 +26,9 @@ public class Memo {
     private String content;
 
     private LocalDate createDate;
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

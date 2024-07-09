@@ -86,4 +86,32 @@ public class MemoServiceImpl implements MemoService {
 
     }
 
+
+    public Memo updateMemo(Long memberId, Integer memoId, MemoDto memoDto) {
+        // 해당 메모가 존재하는지 확인
+        if (memoRepository.findById(memoId).isEmpty())
+            return Memo.builder()
+                    .notebook(null)
+                    .title(null)
+                    .content(null)
+                    .createDate(null)
+                    .build();
+        // 멤버가 해당 노트북을 갖고 있는지 확인
+
+        Integer notebookId = memoRepository.findById(memoId).get().getNotebook().getNotebookId();
+
+        if (memberId == null ||
+                !memberNotebookRepository.existsByMember_IdAndNotebook_NotebookId(memberId, notebookId))
+            return Memo.builder()
+                    .notebook(null)
+                    .title(null)
+                    .content(null)
+                    .createDate(null)
+                    .build();
+
+        Memo targetMemo = memoRepository.findById(memoId).get();
+        targetMemo.update(memoDto.getTitle(), memoDto.getContent());
+        return memoRepository.save(targetMemo);
+    }
+
 }
